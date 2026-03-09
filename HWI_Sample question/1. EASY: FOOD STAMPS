@@ -1,0 +1,70 @@
+## 🍎 Food Stamp Problem
+
+### Problem Statement
+You are given `N` types of food items.  
+Each food item has a **taste value** (an integer).  
+You can buy at most `M` meals in total.  
+
+However, the taste value of a food item decreases each time you buy it:
+- The first time you buy a food item, you get its full taste value.
+- The second time, its taste value is reduced by 1.
+- The third time, reduced by 2, and so on.
+
+Your goal is to **maximize the total taste value** by choosing which foods to buy.
+
+---
+
+### Input Format
+- First line: Two integers `N` (number of food types) and `M` (maximum meals you can buy).
+- Second line: `N` integers representing the taste values of each food item.
+
+---
+
+### Output Format
+- A single integer: the maximum total taste value achievable.
+
+---
+
+### Example
+**Input:**
+-----------------------------------------------------------------------------------------------------------
+SOLUTION CODE:
+#include <iostream>
+#include <vector>
+using namespace std;
+
+int main() {
+    int N, M;
+    cin >> N >> M;
+
+    if(N <= 0 || N > 1000000){
+        cout << "N too large" << endl;
+        return 0;
+    }
+
+    vector<int> v(N), d(N), count(N, 0);
+
+    for(int i=0;i<N;i++) cin >> v[i];
+    for(int i=0;i<N;i++) cin >> d[i];
+
+    int total_test = 0;
+
+    for(int j=0;j<M;j++){
+        int curr_test = 0, curr_indx = -1;
+
+        for(int i=0;i<N;i++){
+            int val = v[i] - d[i]*count[i];
+            if(val > curr_test){
+                curr_test = val;
+                curr_indx = i;
+            }
+        }
+
+        if(curr_indx == -1) break; // safety
+        count[curr_indx]++;
+        total_test += curr_test;
+    }
+
+    cout << total_test << endl;
+}
+
