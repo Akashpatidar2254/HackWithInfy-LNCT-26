@@ -1,0 +1,113 @@
+## 🔄 Maximum Subarray Sum with Swaps
+
+### Problem Statement
+You are given an array of integers (positive and negative).  
+Normally, the **Maximum Subarray Sum (MSS)** problem asks:  
+*What is the largest possible sum of a continuous part of the array?*  
+
+In this variation, you are allowed to perform **at most `K` swaps** between elements of the array before finding the maximum subarray sum.
+
+Your task is to determine the **maximum subarray sum achievable after at most `K` swaps**.
+
+---
+
+### Input Format
+- First line: Two integers `N` (size of the array) and `K` (number of swaps allowed).
+- Second line: `N` integers representing the array elements.
+
+---
+
+### Output Format
+- A single integer: the maximum subarray sum achievable after at most `K` swaps.
+
+---
+
+### Example
+**Input:**
+
+**Explanation:**
+- Without swaps, the best subarray is `[3, -1, 4]` → sum = 6.
+- With 1 swap, you can swap `-2` with `4`.  
+  The array becomes `[4, 3, -1, -2, -5]`.  
+  Best subarray is `[4, 3]` → sum = 7.
+- So the answer is **7**.
+
+**Output:**
+
+---
+
+### Constraints
+- `1 ≤ N ≤ 10^5`
+- `0 ≤ K ≤ 10^5`
+- Array elements can be negative or positive integers.
+--------------------------------------------------------------------------------------------------------------------------------------------------------
+solution: 
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <climits>
+using namespace std;
+
+// Kadane's algorithm restricted to subarray [i, j]
+int kadaneRange(const vector<int>& arr, int i, int j) {
+    int maxSoFar = INT_MIN;
+    int maxEndingHere = 0;
+    for (int k = i; k <= j; k++) {
+        maxEndingHere += arr[k];
+        maxSoFar = max(maxSoFar, maxEndingHere);
+        if (maxEndingHere < 0) maxEndingHere = 0;
+    }
+    return maxSoFar;
+}
+
+int main() {
+    int N, K;
+    cin >> N >> K;
+    vector<int> arr(N);
+    for (int i = 0; i < N; i++) cin >> arr[i];
+
+    int base_ans = kadaneRange(arr, 0, N - 1);
+    int total = INT_MIN;
+
+    for (int i = 0; i < N - 1; i++) {
+        for (int j = i + 1; j < N; j++) {
+            while (K > 0) {
+                int curr_ans = kadaneRange(arr, i, j);
+                total = max(total, curr_ans);
+
+                // Find smallest element in [i, j]
+                auto min_iter = min_element(arr.begin() + i, arr.begin() + j + 1);
+                int minIndex = distance(arr.begin(), min_iter);
+
+                // Find largest element outside [i, j]
+                int maxVal = INT_MIN;
+                int maxIndex = -1;
+
+                if (i > 0) {
+                    auto outer1 = max_element(arr.begin(), arr.begin() + i);
+                    if (*outer1 > maxVal) {
+                        maxVal = *outer1;
+                        maxIndex = distance(arr.begin(), outer1);
+                    }
+                }
+                if (j + 1 < arr.size()) {
+                    auto outer2 = max_element(arr.begin() + j + 1, arr.end());
+                    if (*outer2 > maxVal) {
+                        maxVal = *outer2;
+                        maxIndex = distance(arr.begin(), outer2);
+                    }
+                }
+
+                if (minIndex != -1 && maxIndex != -1) {
+                    swap(arr[minIndex], arr[maxIndex]);
+                }
+
+                K--;
+            }
+        }
+    }
+
+    int m = max(total, base_ans);
+    cout << m << endl;
+    return 0;
+}
