@@ -1,0 +1,98 @@
+questions:
+## ⚔️ Sample Question 2: Heroes vs Villains
+
+### Problem Statement
+There is a battle between heroes and villains.  
+You have `M` heroes, all with the same health `H`.  
+There are `N` villains, each with health `Vi`.
+
+When a hero (health `H`) fights a villain (health `Vi`), three outcomes are possible:
+- If `H > Vi`: The villain is defeated, and the hero’s health is reduced by `Vi`.
+- If `H < Vi`: The villain wins, remains unaffected, and the hero can no longer fight.
+- If `H == Vi`: Both are defeated and removed from battle.
+
+Heroes fight villains in order: villain 1, then villain 2, and so on.  
+If all heroes are defeated before all villains, the heroes lose.  
+To ensure victory, you may remove some villains from the front.
+
+### Objective
+Determine the **minimum number of villains** to remove from the front so that the heroes win.
+
+---
+
+### Parameters
+- `M`: INTEGER  
+  Number of heroes.  
+  Constraints: `1 ≤ M ≤ 10^5`
+
+- `H`: INTEGER  
+  Health of each hero.  
+  Constraints: `1 ≤ H ≤ 10^5`
+
+- `N`: INTEGER  
+  Number of villains.  
+  Constraints: `1 ≤ N ≤ 10^5`
+
+- `Vi`: INTEGER ARRAY  
+  Health of each villain in order.  
+  Constraints: `1 ≤ Vi[i] ≤ 10^5`
+
+---
+
+### 🧪 Case #1
+
+#### Input
+
+------------------------------------------------------------------------------------------------------------------------------------------
+solution:
+#include <iostream>
+
+#include <vector>
+
+using namespace std;
+
+int main() {
+    int V, H;
+    int h;
+
+    cin >> H; // number of heroes
+    cin >> V; // number of villains
+    cin >> h; // health of each hero
+
+    vector < int > h_pow(H);
+    vector < int > v_pow(V);
+
+    for (int i = 0; i < H; i++) {
+        h_pow[i] = h;
+    }
+
+    for (int i = 0; i < V; i++) {
+        cin >> v_pow[i];
+    }
+
+    int i = 0;
+    int j = 0;
+
+    while (j < V && i < H) {
+
+        if (h_pow[i] == v_pow[j]) {
+            i++;
+            j++;
+        }
+        else if (h_pow[i] < v_pow[j]) {
+            i++;
+        }
+        else {
+            h_pow[i] = h_pow[i] - v_pow[j];
+            j++;
+        }
+
+    }
+
+    if (j == V) {
+        cout << 0;
+    }
+    else {
+        cout << V - j;
+    }
+}
