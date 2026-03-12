@@ -1,0 +1,65 @@
+question:
+## 🧠 Sample Question 1: Energy and Exercises
+
+### Problem Statement
+If performing all the exercises does not make you feel tired, return `-1`.
+
+### Parameters
+- `E`: INTEGER  
+  The first line contains an integer `E`, denoting the Energy.  
+  Constraints: `1 ≤ E ≤ 10^5`
+
+- `N`: INTEGER  
+  The next line contains an integer `N`, denoting the number of exercises.  
+  Constraints: `1 ≤ N ≤ 10^5`
+
+- `A`: INTEGER ARRAY  
+  Each line `i` of the `N` subsequent lines (where `0 ≤ i < N`) contains an integer describing the amount of energy drained by the `i`th exercise.  
+  Constraints: `A[i] :: 1 ≤ A[i] ≤ 10^5`
+
+---
+
+### 🧪 Case #1
+
+#### Input
+--------------------------------------------------------------------------------------------------------------------------------------------------------
+solution:
+#include <iostream>
+#include <algorithm>
+#include <vector>
+using namespace std;
+
+int main(){
+    int K,N;
+    cin>>K;
+    cin>>N;
+
+    vector<int> v(N);
+
+    for(int i=0;i<N;i++){
+        cin>>v[i];
+    }
+
+    sort(v.begin(),v.end(),greater<int>());
+
+    int result=0;
+    int i=0;
+
+    while(K>0 && i<N){
+
+        int count=0;
+
+        while(count<2 && K>0){
+            K = K - v[i];
+            result++;
+            count++;
+        }
+
+        i++;
+    }
+
+    if(K>0)
+        cout<<-1;
+    else
+        cout<<result;
+}
