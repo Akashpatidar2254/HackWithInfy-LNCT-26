@@ -1,0 +1,55 @@
+#include <iostream>
+#include <unordered_map>
+#include <vector>
+#include <algorithm>
+using namespace std;
+
+int main() {
+	int n;
+	cin>>n;
+	unordered_map<int,int> freq;
+	vector<int>v(n);
+	for(int i=0;i<n;i++){
+	    cin>>v[i];
+	}
+	
+	pair<int,bool> prev;
+	prev.first=-1;
+	prev.second=true;
+	
+	
+	for(int i=0;i<n;i++){
+	    if(v[i]==prev.first && prev.second==true){
+	        prev.second=(!prev.second);
+	        freq[v[i]]++;
+	        
+	    }
+	    else if(v[i]==prev.first && prev.second==false){
+	        prev.second=(!prev.second);
+	        continue;
+	    }
+	    else if(v[i]!=prev.first){
+	        freq[v[i]]++;
+	        prev.first=v[i];
+	        prev.second=false;
+	        
+	    }
+	    
+	}
+	
+	vector<pair<int, int>> help(freq.begin(), freq.end());
+
+    // Step 2: Sort by second element (value)
+    sort(help.begin(), help.end(), [](const pair<int,int> &a, const pair<int,int> &b) {
+        return a.second > b.second; // ascending order
+    });
+	
+	
+	
+	
+	
+	
+	int ans=help[0].first;
+	
+     cout<<ans;
+}
