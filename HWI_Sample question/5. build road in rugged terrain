@@ -1,0 +1,74 @@
+QUESTION :
+Sample Problem 3: Digging a Road Through Rugged Terrain
+
+You’re tasked with building a road through rugged terrain. Each segment has a known sea level height:
+
+Input: [-1, 1, 1, 1]
+
+To ensure safe construction, the terrain must be transformed into a strictly downward slope, meaning:
+
+Code
+L[0] > L[1] > L[2] > L[3]
+🛠️ Digging Rule
+
+On day D, your digging team can reduce the sea level of any scheduled segment by:
+
+Code
+2D - 1 meters
+You can assign multiple segments to be dug on the same day, and dig the same segment on multiple days.
+
+🎯 Objective
+
+Find the minimum number of days required to transform the terrain into a strictly decreasing sequence.
+
+✅ Output: 3
+
+📈 One Possible Strategy
+
+Day 1: Dig segments 1 and 4 → reduce by 1 meter
+Result: [-1, 0, 1, 0]
+
+Day 2: Dig segments 3 and 4 → reduce by 3 meters
+Result: [-1, 0, -2, -2]
+
+Day 3: Dig segments 2, 3, and 4 → reduce by 5 meters
+Final: [-1, -5, -7, -9]
+
+----------------------------------------------------------------------------------------------------------------------------------------------------
+SOLUTION:
+#include <iostream>
+#include <vector>
+#include <cmath>
+#include <algorithm>
+
+using namespace std;
+
+int main() {
+    
+    int n;
+    cin >> n;
+
+    vector<int> arr(n);
+    for(int i = 0; i < n; i++)
+        cin >> arr[i];
+
+    vector<int> target(n);
+    target[0] = arr[0];
+
+    for(int i = 1; i < n; i++)
+        target[i] = target[i-1] - 1;
+
+    vector<int> diff(n);
+    for(int i = 0; i < n; i++)
+        diff[i] = max(0, arr[i] - target[i]);
+
+    vector<int> each_segment(n,0);
+    for(int i = 1; i < n; i++)
+        each_segment[i] = ceil(sqrt(diff[i]));
+
+    int days = *max_element(each_segment.begin(), each_segment.end());
+
+    cout << days;
+
+    return 0;
+}
